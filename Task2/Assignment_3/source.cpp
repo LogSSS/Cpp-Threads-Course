@@ -66,7 +66,10 @@ public:
         printHeader("Before swap");
         person1.data.print(1);
         person2.data.print(2);
-        std::swap(person1.data.name, person2.data.name);
+        exchangePerson temp;
+        temp.data = person1.data;
+        person1.data = person2.data;
+        person2.data = temp.data;
         printHeader("After swap");
         person1.data.print(1);
         person2.data.print(2);
