@@ -54,13 +54,22 @@ public:
 
     static void Swap(exchangePerson &person1, exchangePerson &person2)
     {
+        if (&person1 == &person2)
+        {
+            std::cout << "Cant swap, same person" << std::endl;
+            return;
+        }
+
         std::lock_guard<std::mutex> lock1(person1.m, std::adopt_lock);
         std::lock_guard<std::mutex> lock2(person2.m, std::adopt_lock);
         std::lock(person1.m, person2.m);
         printHeader("Before swap");
         person1.data.print(1);
         person2.data.print(2);
-        std::swap(person1.data, person2.data);
+        exchangePerson temp;
+        temp.data = person1.data;
+        person1.data = person2.data;
+        person2.data = temp.data;
         printHeader("After swap");
         person1.data.print(1);
         person2.data.print(2);
