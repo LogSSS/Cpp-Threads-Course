@@ -2,23 +2,7 @@
 #include <future>
 #include <cmath>
 
-class A
-{
-public:
-    double time;
-
-    A()
-    {
-        this->time = 0;
-    }
-
-    A(double time)
-    {
-        this->time = time;
-    }
-};
-
-A a;
+double time;
 
 bool checkForEasyNum(int numb)
 {
@@ -44,20 +28,18 @@ int countOfEasyNum(int numb)
         if (checkForEasyNum(i))
             res++;
 
-    a = A((double)(clock() - start) / CLOCKS_PER_SEC);
+    time = (double)(clock() - start) / CLOCKS_PER_SEC;
     return res;
 }
 
 void async(int option)
 {
     int numb;
-    int f;
     std::string type;
     std::future<int> f1;
 
     std::cout << "Enter a number: ";
-    std::cin >> f;
-    numb = f;
+    std::cin >> numb;
     std::cout << std::endl;
 
     if (option == 1)
@@ -78,11 +60,11 @@ void async(int option)
     std::string bob;
     std::cin >> bob;
     if (bob == "1")
-        std::cout << "Square root of your number is: " << sqrt(f) << std::endl;
+        std::cout << "Square root of your number is: " << sqrt(numb) << std::endl;
     else if (bob == "2")
-        std::cout << "Sin of your number is: " << sin(f) << std::endl;
+        std::cout << "Sin of your number is: " << sin(numb) << std::endl;
     else if (bob == "3")
-        std::cout << "ln of your number is: " << log(f) << std::endl;
+        std::cout << "ln of your number is: " << log(numb) << std::endl;
 
     std::cout << std::endl
               << "Ok, waiting for calculations..." << std::endl;
