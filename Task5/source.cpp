@@ -177,6 +177,36 @@ string Task1(string matrixFile, string vectorFile, int procNum, int rowNum, int 
 // У випадку, якщо кількість стовпців не є кратною кількості обчислювачів,
 // функція має повертати вивід
 // "Number of columns is not a multiple of processing unit number" (без лапок).
+
+vector<int> parallelMatrixVectorMultiplyStriped(const vector<vector<int>> &matrix, const vector<int> &vectorData, int procNum)
+{
+    int rowNum = matrix.size();
+    int colNum = matrix[0].size();
+    vector<int> result(rowNum, 0);
+    vector<thread> threads;
+
+    auto multiplyPart = [&](int start, int end)
+    {
+        for (int i = 0; i < rowNum; ++i)
+            for (int j = start; j < end; ++j)
+                result[i] += matrix[i][j] * vectorData[j];
+    };
+
+    int colsPerThread = colNum / procNum;
+
+    for (int i = 0; i < procNum; ++i)
+    {
+        int start = i * colsPerThread;
+        int end = (i == procNum - 1) ? colNum : (i + 1) * colsPerThread;
+        threads.emplace_back(multiplyPart, start, end);
+    }
+
+    for (auto &thread : threads)
+        thread.join();
+
+    return result;
+}
+
 string Task2(string matrixFile, string vectorFile, int procNum, int rowNum, int colNum)
 {
     ifstream file(matrixFile);
@@ -201,7 +231,7 @@ string Task2(string matrixFile, string vectorFile, int procNum, int rowNum, int 
     stringstream functionOutput;
 
     // Розмістіть тут Ваш код
-    vector<int> result = parallelMatrixVectorMultiply(
+    vector<int> result = parallelMatrixVectorMultiplyStriped(
         readMatrixFromFile(matrixFile, rowNum, colNum),
         readVectorFromFile(vectorFile, colNum), procNum);
 
